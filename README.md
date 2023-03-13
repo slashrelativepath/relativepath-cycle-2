@@ -7,7 +7,12 @@ run command `Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.Servi
 ```
 
 ## MacOS Setup
-Install homebrew and multipass
+This script:
+- Installs homebrew
+- Installs multipass using homebrew
+- Launches an instance named `relativepath` using multipass
+- Outputs distro information using `multipass exec`
+
 ```
 Set script as executable
 $ chmod +x macos_packages.sh
