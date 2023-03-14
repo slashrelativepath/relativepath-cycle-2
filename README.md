@@ -8,8 +8,10 @@ Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManage
 
 ## MacOS Setup
 This script:
-- Installs homebrew
-- Installs multipass using homebrew
+- Checks for Linux or MacOS
+- Installs according to OS
+- Installs homebrew if MacOS
+- Installs multipass using homebrew if MacOS
 - Launches an instance named `relativepath` using multipass
 - Outputs distro information using `multipass exec`
 
