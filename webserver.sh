@@ -15,13 +15,10 @@ then
 elif [ "$(uname)" == 'Darwin' ]
 then
      echo "i'm on Mac"
-
      echo "installing brew..."
      NONINTERACTIVE=1 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-
      echo "installing multipass..."
-     brew install --cask multipass
-     
+     brew install --cask multipass     
 fi
 
 echo "launching relativepath instance with multipass"
@@ -32,6 +29,7 @@ multipass exec relativepath -- lsb_release -a
 
 echo "update apt for all current package info"
 multipass exec relativepath -- sudo apt update -yq
+
 echo "installing nginx quietly..."
 multipass exec relativepath -- sudo apt install -yq nginx
 
@@ -42,4 +40,3 @@ else
     echo "nginx installation failed: exiting"
     exit 1
 fi
-
