@@ -4,6 +4,9 @@
 if [ "$(uname)" == 'Linux' ]
 then
     echo "i'm on linux"
+    if [ -x ! "command -v snapd" ]; then
+        sudo apt install snapd
+    fi
     sudo snap install multipass
 elif [ "$(uname)" == 'Darwin' ]
 then
