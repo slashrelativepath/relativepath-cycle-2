@@ -20,7 +20,14 @@ else {
 	echo "Virtual box installed"
 }
 
-choco install multipass -y --params="'/HyperVisor:VirtualBox'"
+multipass version
+$Env:returncode = $?
+if ($returncode -eq "False") {
+	choco install multipass -y --params="'/HyperVisor:VirtualBox'"
+}
+else {
+	echo "Multipass is installed"
+}
 
 refreshenv
 
