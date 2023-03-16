@@ -5,7 +5,7 @@ echo "Checking operating system..."
 if [ "$(uname)" == 'Linux' ]
 then
     echo "i'm on linux"
-    if [ -x ! "command -v snapd" ]; 
+    if ! [ -x "command -v snapd" ]; 
     then
         echo "installing snapd..."
         sudo apt install snapd
