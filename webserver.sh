@@ -4,14 +4,24 @@
 echo "Checking operating system..."
 if [ "$(uname)" == 'Linux' ]
 then
+    
     echo "i'm on linux"
-    if ! [ -x "command -v snapd" ]; 
+    if ( snap --version );
     then
+        echo "snap installed already"
+    else
         echo "installing snapd..."
         sudo apt install snapd
     fi
-    echo "installing multipass..."
-    sudo snap install multipass
+    
+    if ( multipass --version );
+    then
+        echo "multipass already installed"
+    else
+        echo "installing multipass..."
+        sudo snap install multipass
+    fi
+    
 elif [ "$(uname)" == 'Darwin' ]
 then
      echo "i'm on Mac"
@@ -24,8 +34,12 @@ fi
 echo "launching relativepath instance with multipass"
 multipass launch --name relativepath
 
+# Generate SSH keys 
+# Add SSH public key to VM
+# Add SSH command to login to VM
+
 echo "show distro information using multipass exec"
-multipass exec relativepath -- lsb_release -a
+multipass exec relativepath -- lsb_release -a  
 
 echo "update apt for all current package info"
 multipass exec relativepath -- sudo apt update -yq
