@@ -2,11 +2,11 @@
 # script to create an Ubuntu VM with nginx installed
 
 echo "Checking operating system..."
-if [ "$(uname)" == 'Linux' ]
+if ( "$(uname)" == 'Linux' );
 then
-    
+
     echo "i'm on linux"
-    if ( snap --version );
+    if ( -x "command -v snap" );
     then
         echo "snap installed already"
     else
@@ -14,7 +14,7 @@ then
         sudo apt install snapd
     fi
     
-    if ( multipass --version );
+    if ( -x "command -v multipass" );
     then
         echo "multipass already installed"
     else
@@ -22,24 +22,30 @@ then
         sudo snap install multipass
     fi
     
-elif [ "$(uname)" == 'Darwin' ]
+elif ( "$(uname)" == 'Darwin' );
 then
-     echo "i'm on Mac"
-     echo "installing brew..."
-     NONINTERACTIVE=1 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-     echo "installing multipass..."
-     brew install --cask multipass     
+    echo "i'm on Mac"
+    echo "installing brew..."
+    NONINTERACTIVE=1 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+    echo "installing multipass..."
+    brew install --cask multipass     
 fi
 
 echo "launching relativepath instance with multipass"
 multipass launch --name relativepath
 
-# Generate SSH keys 
+# Check for existing ssh keys
+if [ -f "~/.ssh/relativepath-ed25519" ]; then
+	echo "relativepath ssh key exists"
+else
+	echo "relativepath ssh key does not exist, creating..."
+	ssh-keygen -f ~/.ssh/relativepath-ed25519 -t ed25519 -b 4096
+fi 
 # Add SSH public key to VM
 # Add SSH command to login to VM
 
 echo "show distro information using multipass exec"
-multipass exec relativepath -- lsb_release -a  
+multipass exec relativepath -- lsb_release -a
 
 echo "update apt for all current package info"
 multipass exec relativepath -- sudo apt update -yq
@@ -54,3 +60,4 @@ else
     echo "nginx installation failed: exiting"
     exit 1
 fi
+
