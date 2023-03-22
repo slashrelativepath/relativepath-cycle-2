@@ -1,0 +1,5 @@
+users:
+  - default
+  - name: rp-user
+    sudo: ALL=(ALL) NOPASSWD:ALL
+    ssh-authorized-keys: $(cat ed25519.pub)
