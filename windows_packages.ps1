@@ -33,6 +33,8 @@ refreshenv
 
 multipass set local.driver=virtualbox
 
+multipass set local.privileged-mounts=1
+
 refreshenv
 
 echo "launching relative path instance with Multipass"
