@@ -56,14 +56,7 @@ else
     multipass launch --name relativepath --cloud-init ./cloud-init.yaml
 fi
 
-
-
 # Add SSH public key to VM
 # Add SSH command to login to VM
 
 ssh ubuntu@$(multipass info relativepath | grep IPv4 | awk '{ print $2 }')
-
-# if [ -f "./ed25519" ] 
-# then
-# 	$( rm -f "./ed25519" )
-# fi
