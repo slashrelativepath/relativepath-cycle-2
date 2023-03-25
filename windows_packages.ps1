@@ -1,4 +1,8 @@
 
+Function Get-Wifi-Network{
+  return multipass networks --format yaml | grep wifi -B 1 | awk -F: 'NR==1{print "$1"}'
+}
+
 Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; 
 choco -v
 $Env:returncode = $?
@@ -32,12 +36,12 @@ else {
 refreshenv
 
 multipass set local.driver=virtualbox
-
+Start-Sleep -Seconds 5
 multipass set local.privileged-mounts=1
-
+Start-Sleep -Seconds 5
+$network=Get-Wifi-Network
+multipass set local.bridged-network=$network
 refreshenv
-
 echo "launching relative path instance with Multipass"
-multipass launch --name relativepath0
-
+multipass launch --name relativepath --bridged
 
