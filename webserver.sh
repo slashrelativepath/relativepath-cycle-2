@@ -45,14 +45,14 @@ then
     echo "cloud-init.yaml already exists and is correct"
 else
     echo "create cloud-init.yaml and add the ssh public key..."
-    cat <<- EOF > "cloud-init.yaml"
+    cat <<- EOF > cloud-init.yaml
 users:
-	- default
-	- name: rp-user
-		sudo: ALL=(ALL) NOPASSWD:ALL
-		shell: /bin/bash
-		ssh_authorized_keys:
-			- $(cat ./ed25519.pub)
+  - default
+  - name: rp-user
+    sudo: ALL=(ALL) NOPASSWD:ALL
+    shell: /bin/bash
+    ssh_authorized_keys:
+      - $(cat ./ed25519.pub)
 EOF
 fi
 
