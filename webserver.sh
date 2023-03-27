@@ -32,27 +32,24 @@ then
 fi
 
 # Check for existing ssh keys
-if [ -f "./ed25519" ] 
+if [ -f "./ed25519" ]
 then
 	echo "relativepath ssh key exists"
 else
 	echo "relativepath ssh key does not exist, creating..."
-	ssh-keygen -f ./ed25519 -t ed25519 -b 4096 -N ''
-fi 
-# Add SSH public key to VM
-# Add SSH command to login to VM
+	ssh-keygen -f "./ed25519" -t ed25519 -b 4096 -N ''
+fi
+
+echo "launching relativepath instance with multipass"
 if ( multipass info relativepath )
 then
-	echo "relativepath instance already exists"
+    echo "relativepath vm already exists!"
 else
-	echo "launching relativepath instance with multipass"
-	multipass launch --name relativepath --cloud-init relativepath.yaml
+    echo "creating relative path vm..."
+    multipass launch --name relativepath
 fi
+
+# Add SSH public key to VM
+# Add SSH command to login to VM
 
 ssh ubuntu@$(multipass info relativepath | grep IPv4 | awk '{ print $2 }')
-
-if [ -f "./ed25519" ] 
-then
-	$( rm -f "./ed25519" )
-fi
-
