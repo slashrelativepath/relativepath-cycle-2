@@ -68,4 +68,4 @@ fi
 # Add SSH public key to VM
 # Add SSH command to login to VM
 
-ssh ubuntu@$(multipass info relativepath | grep IPv4 | awk '{ print $2 }')
+ssh -i ./ed25519 rp-user@$(multipass info relativepath | grep IPv4 | awk '{ print $2 }')
