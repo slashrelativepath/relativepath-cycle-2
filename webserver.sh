@@ -65,7 +65,11 @@ else
     multipass launch --name relativepath --cloud-init cloud-init.yaml
 fi
 
-# ssh -i ./ed25519 rp-user@$(multipass info relativepath | grep IPv4 | awk '{ print $2 }')
-scp -iy ./ed25519 ./vm-install.sh rp-user@$(multipass info relativepath | grep IPv4 | awk '{ print $2 }'):/home/rp-user/vm-install.sh 
+scp -iy ./ed25519 ./vm-install.sh rp-user@$(multipass info relativepath | grep IPv4 | awk '{ print $2 }'):/home/rp-user/vm-install.sh || exit
 
-ssh -iy ./ed25519 rp-user@$(multipass info relativepath | grep IPv4 | awk '{ print $2 }') "bash ~/vm-install.sh"
+ssh -iy ./ed25519 rp-user@$(multipass info relativepath | grep IPv4 | awk '{ print $2 }') "bash ~/vm-install.sh" || exit
+
+ssh -i ./ed25519 rp-user@$(multipass info relativepath | grep IPv4 | awk '{ print $2 }') || exit
+
+bash destroy_webserver.sh
+exit
