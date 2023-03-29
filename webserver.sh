@@ -40,7 +40,7 @@ else
 	ssh-keygen -f "./ed25519" -t ed25519 -b 4096 -N ''
 fi
 
-if [ -f ./cloud-init.yaml ] #(grep "$(cat ./ed25519.pub)" ./cloud-init.yaml)
+if (grep "$(cat ./ed25519.pub)" ./cloud-init.yaml)  # [ -f ./cloud-init.yaml ] #
 then
     echo "cloud-init.yaml already exists and is correct"
 else
@@ -65,7 +65,7 @@ else
     multipass launch --name relativepath --cloud-init cloud-init.yaml
 fi
 
-# Add SSH public key to VM
-# Add SSH command to login to VM
+# ssh -i ./ed25519 rp-user@$(multipass info relativepath | grep IPv4 | awk '{ print $2 }')
+scp -iy ./ed25519 ./vm-install.sh rp-user@$(multipass info relativepath | grep IPv4 | awk '{ print $2 }'):/home/rp-user/vm-install.sh 
 
-ssh -i ./ed25519 rp-user@$(multipass info relativepath | grep IPv4 | awk '{ print $2 }')
+ssh -iy ./ed25519 rp-user@$(multipass info relativepath | grep IPv4 | awk '{ print $2 }') "bash ~/vm-install.sh"
