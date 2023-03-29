@@ -25,10 +25,23 @@ then
 elif [ "$(uname)" == 'Darwin' ]
 then
     echo "i'm on Mac"
-    echo "installing brew..."
-    NONINTERACTIVE=1 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-    echo "installing multipass..."
-    brew install --cask multipass     
+    
+    if ( command -v multipass )
+    then
+        echo "brew already exists"
+    else
+        echo "installing brew..."
+        NONINTERACTIVE=1 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+    fi
+    
+    if ( command -v multipass )
+    then
+        echo "multipass already installed"
+    else
+        echo "installing multipass..."
+        brew install --cask multipass 
+    fi
+        
 fi
 
 # Check for existing ssh keys
