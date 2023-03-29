@@ -40,7 +40,7 @@ else
 	ssh-keygen -f "./ed25519" -t ed25519 -b 4096 -N ''
 fi
 
-if (grep "$(cat ./ed25519.pub)" ./cloud-init.yaml)  # [ -f ./cloud-init.yaml ] #
+if ( grep "$(cat ./ed25519.pub)" ./cloud-init.yaml 2> /dev/null )  # [ -f ./cloud-init.yaml ] #
 then
     echo "cloud-init.yaml already exists and is correct"
 else
@@ -65,11 +65,16 @@ else
     multipass launch --name relativepath --cloud-init cloud-init.yaml
 fi
 
-scp -iy ./ed25519 ./vm-install.sh rp-user@$(multipass info relativepath | grep IPv4 | awk '{ print $2 }'):/home/rp-user/vm-install.sh || exit
+echo 'Copying vm-install script to vm $HOME...'
+scp -i ./ed25519 -o StrictHostKeyChecking=accept-new -q ./vm-install.sh rp-user@$(multipass info relativepath | grep IPv4 | awk '{ print $2 }'):/home/rp-user/vm-install.sh || exit
 
-ssh -iy ./ed25519 rp-user@$(multipass info relativepath | grep IPv4 | awk '{ print $2 }') "bash ~/vm-install.sh" || exit
+echo 'Executing vm-install script...'
+ssh -i ./ed25519 rp-user@$(multipass info relativepath | grep IPv4 | awk '{ print $2 }') "bash ~/vm-install.sh" || exit
 
+echo "Opening terminal on vm..."
 ssh -i ./ed25519 rp-user@$(multipass info relativepath | grep IPv4 | awk '{ print $2 }') || exit
 
+echo "Destroying webserver vm configuration..."
 bash destroy_webserver.sh
+
 exit
