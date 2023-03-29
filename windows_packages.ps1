@@ -33,6 +33,10 @@ refreshenv
 
 multipass set local.driver=virtualbox
 
+
+
 refreshenv
 
 multipass launch --name relativepath
+
+multipass shell relativepath
