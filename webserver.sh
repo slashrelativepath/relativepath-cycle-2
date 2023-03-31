@@ -79,15 +79,22 @@ else
 fi
 
 echo 'Copying vm-install script to vm $HOME...'
-scp -i ./ed25519 -o StrictHostKeyChecking=accept-new -q ./vm-install.sh rp-user@$(multipass info relativepath | grep IPv4 | awk '{ print $2 }'):/home/rp-user/vm-install.sh || exit
+scp -i ./ed25519 -o StrictHostKeyChecking=accept-new -q ./vm-install.sh rp-user@$(multipass info relativepath | grep IPv4 | awk '{ print $2 }'):/home/rp-user/vm-install.sh
 
 echo 'Executing vm-install script...'
-ssh -i ./ed25519 rp-user@$(multipass info relativepath | grep IPv4 | awk '{ print $2 }') "bash ~/vm-install.sh" || exit
+ssh -i ./ed25519 rp-user@$(multipass info relativepath | grep IPv4 | awk '{ print $2 }') "bash ~/vm-install.sh"
 
 echo "Opening terminal on vm..."
-ssh -i ./ed25519 rp-user@$(multipass info relativepath | grep IPv4 | awk '{ print $2 }') || exit
+ssh -i ./ed25519 rp-user@$(multipass info relativepath | grep IPv4 | awk '{ print $2 }')
 
 echo "Destroying webserver vm configuration..."
 bash destroy_webserver.sh
+
+# until ( command multipass info relativepath | grep State | grep Stopped)
+# do
+#     sleep 10
+# done
+
+# bash destroy_webserver.sh
 
 exit
