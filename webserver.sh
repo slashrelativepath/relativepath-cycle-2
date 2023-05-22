@@ -25,10 +25,23 @@ then
 elif [ "$(uname)" == 'Darwin' ]
 then
     echo "i'm on Mac"
-    echo "installing brew..."
-    NONINTERACTIVE=1 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-    echo "installing multipass..."
-    brew install --cask multipass     
+    
+    if ( command -v multipass )
+    then
+        echo "brew already exists"
+    else
+        echo "installing brew..."
+        NONINTERACTIVE=1 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+    fi
+    
+    if ( command -v multipass )
+    then
+        echo "multipass already installed"
+    else
+        echo "installing multipass..."
+        brew install --cask multipass 
+    fi
+        
 fi
 
 # Check for existing ssh keys
@@ -40,7 +53,7 @@ else
 	ssh-keygen -f "./ed25519" -t ed25519 -b 4096 -N ''
 fi
 
-if [ -f ./cloud-init.yaml ] #(grep "$(cat ./ed25519.pub)" ./cloud-init.yaml)
+if ( grep "$(cat ./ed25519.pub)" ./cloud-init.yaml 2> /dev/null )  # [ -f ./cloud-init.yaml ] #
 then
     echo "cloud-init.yaml already exists and is correct"
 else
@@ -65,7 +78,23 @@ else
     multipass launch --name relativepath --cloud-init cloud-init.yaml
 fi
 
-# Add SSH public key to VM
-# Add SSH command to login to VM
+echo 'Copying vm-install script to vm $HOME...'
+scp -i ./ed25519 -o StrictHostKeyChecking=accept-new -q ./vm-install.sh rp-user@$(multipass info relativepath | grep IPv4 | awk '{ print $2 }'):/home/rp-user/vm-install.sh
 
+echo 'Executing vm-install script...'
+ssh -i ./ed25519 rp-user@$(multipass info relativepath | grep IPv4 | awk '{ print $2 }') "bash ~/vm-install.sh"
+
+echo "Opening terminal on vm..."
 ssh -i ./ed25519 rp-user@$(multipass info relativepath | grep IPv4 | awk '{ print $2 }')
+
+echo "Destroying webserver vm configuration..."
+bash destroy_webserver.sh
+
+# until ( command multipass info relativepath | grep State | grep Stopped)
+# do
+#     sleep 10
+# done
+
+# bash destroy_webserver.sh
+
+exit
